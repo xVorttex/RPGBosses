@@ -1,0 +1,9 @@
+main: eu.vortexgg.rpg.RPG
+version: 1.3.3.7
+name: VRPG
+author: VortexGG
+softdepend: [Vault, ProtocolLib, HolographicDisplays, PlaceholderAPI]
+api-version: 1.13
+commands:
+  spawner:
+  spawners:

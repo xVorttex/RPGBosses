@@ -1,0 +1,8 @@
+BOSS_KILLED_HEADER:
+  - "Босс %displayname% &fбыл повержен! Нападающие разделили между собой &a$%money%"
+  - "&8&m------------------"
+  - "  Топ нападавших: "
+BOSS_TOP_FORMAT: "  %displayname% &7- &a$%earned% &7(&c%percentage% %, &4%damage% &cурона&7)"
+BOSS_KILLED_OTHER: "  &fи %amount% другие..."
+BOSS_KILLED_FOOTER:
+  - "&8&m------------------"
