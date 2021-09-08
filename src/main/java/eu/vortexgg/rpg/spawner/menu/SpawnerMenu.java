@@ -67,9 +67,7 @@ public class SpawnerMenu extends Menu {
 
         lore.add("");
         lore.add("&7Используя кнопки ниже,");
-        lore.add(" &7вы можете изменить квест.");
-        lore.add("&fТекст квеста поменять можно");
-        lore.add(" &fтолько в конфиге");
+        lore.add(" &7вы можете изменить спавнер.");
 
         item.setLore(lore);
         return item;
