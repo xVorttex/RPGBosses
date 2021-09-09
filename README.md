@@ -4,6 +4,7 @@ Verification task for a developer application. DiamondWorld.
 # TODO
 - Перенести все сообщения в конфиг
 - Фиксануть баг с {player} в голограммах
+- Добавить второго босса из т. з
 
 # Usage terms:
 You cannot claim that this was all made from scratch by you.\
