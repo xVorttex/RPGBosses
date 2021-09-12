@@ -55,11 +55,22 @@ public class Spawner implements ConfigurationSerializable {
         this.showHologram = (Boolean) map.get("showHologram");
     }
 
+    /*
+     * Основной метод для смерти текущего моба:
+     * 1. Обновляет время респавна.
+     * 2. Обновляет текущего босса
+     * */
     public void die() {
         respawnAt = System.currentTimeMillis() + interval;
         current = null;
     }
 
+    /*
+     * Основной метод для тика спавнера (1 тик = 20 секунд):
+     * 1. Тикает босса, если он живой
+     * 2. Проверяет, если он готов для спавна
+     * 3. Обновляет таймер-голограмму, если он мёртв
+     * */
     public void update() {
         if(isAlive()) {
             current.onTick();
@@ -77,6 +88,12 @@ public class Spawner implements ConfigurationSerializable {
         } else clearHologram();
     }
 
+    /*
+     * Основной метод для спавна босса:
+     * 1. Очищает таймер-голограмму если она есть
+     * 2. Спавнит моба
+     * 3. Применяет ХП, имя к мобу.
+     * */
     public void spawn() {
         current = SpawnerManager.get().spawnBoss(this);
         LivingEntity entity = current.getEntity();
@@ -85,25 +102,67 @@ public class Spawner implements ConfigurationSerializable {
         entity.setHealth(health);
     }
 
+    /*
+     * Основной метод для вынужденного удаления моба и голограммы, если они есть.
+     * */
     public void despawn() {
         if(current != null)
             current.despawn();
         clearHologram();
     }
 
-    public boolean isAlive() {
-        return current != null && !current.getEntity().isDead();
-    }
-
-    public long getRemainingUntilRespawn() {
-        return respawnAt - System.currentTimeMillis();
-    }
-
+    /*
+     * Очищение таймер-голограммы
+     * */
     public void clearHologram() {
         if(hologram != null) {
             hologram.delete();
             hologram = null;
         }
+    }
+
+    /*
+     * Метод получения описания спавнера в данный момент.
+     * */
+    public List<String> getDescription() {
+        return Lists.newArrayList(
+        "&7ID: &f" + id,
+        "&7Тип: &f" + type.getId(),
+        "&7Урон: &f" + damage,
+        "&7ХП: &f" + health,
+        "&7Статус: " + (isAlive() ? "&a&lЖивой" : "&c&l" + TimeUtil.formatSeconds(getRemainingUntilRespawn() / 1000))
+        );
+    }
+
+    /*
+     * Регистрирует спавнер в системе.
+     * */
+    public void register() {
+        SpawnerManager.get().getSpawners().put(id, this);
+    }
+
+    /*
+     * Удаляет спавнер в системе.
+     * Удаляет моба, если он живой
+     * Удаляет таймер-голограмму, если она есть.
+     * */
+    public void unregister() {
+        despawn();
+        SpawnerManager.get().getSpawners().remove(id);
+    }
+
+    /*
+     * Возвращает true, если моб живой.
+     * */
+    public boolean isAlive() {
+        return current != null && !current.getEntity().isDead();
+    }
+
+    /*
+     * Получение оставшиеся времени до спавна (в миллисекундах)
+     * */
+    public long getRemainingUntilRespawn() {
+        return respawnAt - System.currentTimeMillis();
     }
 
     @Override
@@ -120,24 +179,4 @@ public class Spawner implements ConfigurationSerializable {
         map.put("respawnAt", respawnAt);
         return map;
     }
-
-    public List<String> getDescription() {
-        return Lists.newArrayList(
-        "&7ID: &f" + id,
-        "&7Тип: &f" + type.getId(),
-        "&7Урон: &f" + damage,
-        "&7ХП: &f" + health,
-        "&7Статус: " + (isAlive() ? "&a&lЖивой" : "&c&l" + TimeUtil.formatSeconds(getRemainingUntilRespawn() / 1000))
-        );
-    }
-
-    public void register() {
-        SpawnerManager.get().getSpawners().put(id, this);
-    }
-
-    public void unregister() {
-        despawn();
-        SpawnerManager.get().getSpawners().remove(id);
-    }
-
 }

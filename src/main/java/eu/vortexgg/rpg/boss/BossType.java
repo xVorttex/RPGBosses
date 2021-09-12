@@ -9,6 +9,14 @@ import org.bukkit.entity.EntityType;
 
 @Getter
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+
+/*
+ * Необходимая регистрация типа боссов.
+ * Структура:
+ * ID - идентификатор типа необходимый при создании/изменения боссов
+ * Clazz - класс от типа
+ * Data - дата применяющаяся при спавне босса
+ * */
 public enum BossType {
 
     SUMMONER("summoner", SummonerBoss.class,

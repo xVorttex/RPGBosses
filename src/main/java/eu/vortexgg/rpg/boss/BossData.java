@@ -32,6 +32,12 @@ public class BossData {
     boolean baby, child, broadcastable = true;
     double regen, knockbackResistance, attackSpeed, movementSpeed, followRange, inactiveRadius = 24;
 
+    /*
+     * Применяет всю дату босса к существу включая:
+     * 1. Возраст (если возможно)
+     * 2. Аммуницию
+     * 3. Аттрибуты
+     * */
     public void apply(LivingEntity entity) {
         if(entity instanceof Ageable && baby)
             ((Ageable)entity).setBaby();

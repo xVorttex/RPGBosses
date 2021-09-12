@@ -49,6 +49,11 @@ public abstract class Boss {
         this.type = type;
     }
 
+    /*
+     * Основной метод при спавне моба:
+     * Спавнит моба, применяя дату из типа босса
+     * Тригеррит ивенты, и так-же добавляет в мапу живых боссов.
+     * */
     public void spawn(Location spawn) {
         entity = (LivingEntity) spawn.getWorld().spawnEntity(spawn, type.getData().getType());
         id = entity.getUniqueId();
@@ -57,6 +62,11 @@ public abstract class Boss {
         Bukkit.getPluginManager().callEvent(new BossSpawnEvent(this));
     }
 
+    /*
+     * Основной метод при специальном удалении босса:
+     * Удаляет живого моба если он есть, и так-же
+     * даёт знать спавнеру что он был деспавнут.
+     * */
     public void despawn() {
         if (entity != null) {
             entity.remove();
@@ -64,6 +74,11 @@ public abstract class Boss {
         }
     }
 
+    /*
+     * Основной метод при тике босса (1 тик = 20 секунд):
+     * Телепортирует босса на точку спавна, если он за макс. радиусом от неё.
+     * Если босс имеет способность исцеления, применяет её (Костыль полный)
+     * */
     public void onTick() {
         if (isOutsideOfRadius())
             entity.teleport(spawner.getSpawnLocation());
@@ -71,6 +86,10 @@ public abstract class Boss {
             heal(type.getData().getRegen());
     }
 
+    /*
+     * Основной метод при аттаке босса на игрока:
+     * Изменяет исходимый урон на применимый в спавнере (включая множители, напр.: зелье силы)
+     * */
     public void onAttack(Player player, EntityDamageByEntityEvent event) {
         double damage = spawner.getDamage(), multiplier = 1.0;
 
@@ -82,7 +101,7 @@ public abstract class Boss {
     }
 
     /*
-    * Основной метод при смерти босса включающий:
+    * Основной метод при смерти босса:
     * 1. Выдача валютной награды всем нападавшим по нанесенному урону
     * 2. Оповещение о смерти босса
     * 3. Выпадение рандомного лута на точке смерти.
@@ -129,17 +148,17 @@ public abstract class Boss {
         }
 
         TaskUtil.async(() -> {
-                    List<Pair<String, Integer>> top = damagers.entrySet().stream().sorted(Comparator.comparingDouble(Map.Entry::getValue)).map(entry -> Pair.of(entry.getKey(), entry.getValue())).collect(Collectors.toList());
-                    if (top.size() > 3)
-                        top.subList(0, 2);
-                    DataManager.get().update(
-                            "INSERT INTO bosses(ID, DATE, TOP) VALUES" +
-                                    "(" +
-                                    "'" + FastUUID.toString(id) + "', " +
-                                    "'" + System.currentTimeMillis() + "', " +
-                                    "'" + JavaUtil.stringify(top, 4, "player", "damage") + "'"
-                                    + ")");
-                }
+             List<Pair<String, Integer>> top = damagers.entrySet().stream().sorted(Comparator.comparingDouble(Map.Entry::getValue)).map(entry -> Pair.of(entry.getKey(), entry.getValue())).collect(Collectors.toList());
+             if (top.size() > 3)
+                 top.subList(0, 2);
+             DataManager.get().update(
+                   "INSERT INTO bosses(ID, DATE, TOP) VALUES" +
+                             "(" +
+                             "'" + FastUUID.toString(id) + "', " +
+                             "'" + System.currentTimeMillis() + "', " +
+                             "'" + JavaUtil.stringify(top, 4, "player", "damage") + "'"
+                             + ")");
+             }
         );
 
         if (broadcastable) {
@@ -157,6 +176,10 @@ public abstract class Boss {
         SpawnerManager.get().getAliveBosses().remove(this);
     }
 
+    /*
+     * Основной метод при получении урона от любого игрока:
+     * Сохраняет/повышает тотальный урон по боссу игрока
+     * */
     public void onDamage(Player player, double damage) {
         totalDamage += damage;
 
@@ -168,10 +191,16 @@ public abstract class Boss {
         }
     }
 
+    /*
+     * Проверяет если моб за макс. радиусом от точки.
+     * */
     public boolean isOutsideOfRadius() {
         return entity.getLocation().distance(spawner.getSpawnLocation()) >= type.getData().getInactiveRadius();
     }
 
+    /*
+     * Основной метод для отхила моба
+     * */
     public void heal(double health) {
         BukkitUtil.setHealth(entity, entity.getHealth() + health);
     }
