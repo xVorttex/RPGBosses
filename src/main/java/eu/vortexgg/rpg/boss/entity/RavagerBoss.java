@@ -17,8 +17,8 @@ import org.bukkit.util.Vector;
 
 public class RavagerBoss extends Boss {
 
-    private static final ItemStack RAVAGER_AXE = new VItemStack(Material.IRON_AXE, "",Enchantment.DAMAGE_ALL, 1);
-    private static final ItemStack RAVAGER_CROSSBOW = new VItemStack(Material.CROSSBOW, "",Enchantment.IMPALING, 5, Enchantment.MULTISHOT, 1);
+    private static final ItemStack RAVAGER_AXE = new VItemStack(Material.IRON_AXE, "", Enchantment.DAMAGE_ALL, 1);
+    private static final ItemStack RAVAGER_CROSSBOW = new VItemStack(Material.CROSSBOW, "", Enchantment.IMPALING, 5, Enchantment.MULTISHOT, 1);
     private static final PotionEffect RAVAGER_STRENGTH = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 200, 0);
 
     private int abilityCooldown;
