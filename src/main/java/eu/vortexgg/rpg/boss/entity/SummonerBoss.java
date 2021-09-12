@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import eu.vortexgg.rpg.boss.Boss;
 import eu.vortexgg.rpg.boss.BossType;
 import eu.vortexgg.rpg.spawner.Spawner;
+import eu.vortexgg.rpg.util.BukkitUtil;
 import eu.vortexgg.rpg.util.VItemStack;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -74,7 +75,7 @@ public class SummonerBoss extends Boss {
         @Override
         public void spawn(Location spawn) {
             super.spawn(spawn);
-            entity.setCustomName("&c&lМиники");
+            entity.setCustomName(BukkitUtil.color("&c&lМиники"));
         }
 
         @Override

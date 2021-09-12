@@ -52,7 +52,7 @@ public class SpawnersMenu extends PaginatedMenu<Spawner> {
             } else if(t == ClickType.SHIFT_RIGHT) {
                 spawner.getSpawnerMenu().open(p);
             } else if(t == ClickType.SHIFT_LEFT) {
-                SpawnerManager.get().getSpawners().remove(spawner.getId());
+                spawner.unregister();
                 p.sendMessage(BukkitUtil.color("Вы успешно &cудалили спавнер " + spawner.getId()));
                 super.update();
             }

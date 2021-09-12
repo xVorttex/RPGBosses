@@ -61,7 +61,7 @@ public class SpawnerMenu extends Menu {
 
         lore.add("");
         lore.add("&7Используя кнопки ниже,");
-        lore.add(" &7вы можете изменить квест.");
+        lore.add(" &7вы можете изменить спавнер.");
 
         item.setLore(lore);
         return item;
@@ -78,7 +78,7 @@ public class SpawnerMenu extends Menu {
             spawner.setDisplayName(BukkitUtil.color(lines[0]));
             parent.update();
             parent.open(p);
-        }, "", "Напишите новое имя", "-----", "-----"));
+        }, "", "Напишите новое имя", "---", "---"));
 
         return item;
     }

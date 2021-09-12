@@ -58,7 +58,7 @@ public class SignManager implements Listener {
     }
 
     public void open(Player p, SignCallback callback, String... lines) {
-        Location location = p.getLocation().add(0.0, 2.0, 0.0);
+        Location location = p.getLocation().add(0.0, 50.0, 0.0);
         p.sendBlockChange(location, Material.OAK_WALL_SIGN, (byte) 0);
         if (lines != null && lines.length == 4)
             p.sendSignChange(location, lines);
@@ -78,7 +78,7 @@ public class SignManager implements Listener {
     }
 
     public boolean hasEditor(Player p) {
-        return editors.containsKey(p.getName()) && opened.remove(p.getName());
+        return editors.containsKey(p.getName()) && !opened.remove(p.getName());
     }
 
     public interface SignCallback {

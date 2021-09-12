@@ -5,7 +5,6 @@ import eu.vortexgg.rpg.boss.entity.SummonerBoss;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 
 @Getter

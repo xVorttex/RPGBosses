@@ -26,8 +26,9 @@ public class SpawnerCommands implements CommandExecutor {
     public boolean onCommand(CommandSender s, Command cmd, String arg, String[] args) {
         if (s.hasPermission("admin")) {
             if (args.length == 0) {
-                s.sendMessage(BukkitUtil.formatHelp("Квесты"));
+                s.sendMessage(BukkitUtil.formatHelp("Спавнеры"));
                 s.sendMessage("/spawner create <айди> <displayName> <type> <health> <damage> <interval>");
+                s.sendMessage("/spawner <айди>");
                 return true;
             } else {
                 switch (args[0].toLowerCase()) {

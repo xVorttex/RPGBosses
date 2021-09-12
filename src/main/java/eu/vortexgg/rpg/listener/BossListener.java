@@ -45,28 +45,24 @@ public class BossListener implements Listener {
     public void onDamage(EntityDamageEvent e) {
         LivingEntity damager = BukkitUtil.getFinalAttacker(e, true);
 
-        if(damager != null && !(damager instanceof Player)) {
-            e.setCancelled(true);
-            return;
-        }
-
         Entity entity = e.getEntity();
 
         Boss boss = verify(entity);
         if (boss != null) {
+
             EntityDamageEvent.DamageCause cause = e.getCause();
             if(cause == EntityDamageEvent.DamageCause.FALL || cause == EntityDamageEvent.DamageCause.FALLING_BLOCK || cause == EntityDamageEvent.DamageCause.SUFFOCATION || cause == EntityDamageEvent.DamageCause.DROWNING) {
                 e.setCancelled(true);
                 return;
             }
-            if(damager != null)
+            if(damager instanceof Player)
                 boss.onDamage((Player) damager, e.getFinalDamage());
             return;
         }
 
-        if(damager != null) {
+        if(damager instanceof Player) {
             boss = verify(damager);
-            if (boss != null) {
+            if (boss != null)  {
                 boss.onAttack((Player) damager, (EntityDamageByEntityEvent) e);
             }
         }

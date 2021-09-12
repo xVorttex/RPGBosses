@@ -135,4 +135,9 @@ public class Spawner implements ConfigurationSerializable {
         SpawnerManager.get().getSpawners().put(id, this);
     }
 
+    public void unregister() {
+        despawn();
+        SpawnerManager.get().getSpawners().remove(id);
+    }
+
 }
