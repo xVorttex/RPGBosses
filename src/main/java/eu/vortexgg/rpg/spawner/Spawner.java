@@ -3,6 +3,7 @@ package eu.vortexgg.rpg.spawner;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.object.line.CraftTextLine;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import eu.vortexgg.rpg.RPG;
 import eu.vortexgg.rpg.boss.Boss;
@@ -16,7 +17,9 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.LivingEntity;
 
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -32,18 +35,22 @@ public class Spawner implements ConfigurationSerializable {
     SpawnerMenu spawnerMenu;
     Hologram hologram;
     boolean showHologram = true;
+    String displayName;
+    double damage, health;
 
-    public Spawner(String id, Location spawnLocation, BossType type, Number interval) {
+    public Spawner(String id, String displayName, Location spawnLocation, BossType type, double health, double damage, Number interval) {
         this.id = id;
         this.type = type;
+        this.displayName = displayName;
+        this.health = health;
+        this.damage = damage;
         this.spawnLocation = spawnLocation;
         this.interval = interval.longValue();
         this.spawnerMenu = new SpawnerMenu(this);
-        SpawnerManager.get().getSpawners().put(id, this);
     }
 
     public Spawner(Map<String, Object> map) {
-        this((String) map.get("id"), BukkitUtil.fromString((String) map.get("location")), BossType.valueOf((String) map.get("type")), ((Number) map.get("interval")).longValue());
+        this((String) map.get("id"), BukkitUtil.color((String) map.get("displayName")), BukkitUtil.fromString((String) map.get("location")), BossType.valueOf((String) map.get("type")), ((Number) map.get("damage")).doubleValue(), ((Number) map.get("health")).doubleValue(), ((Number) map.get("interval")).longValue());
         this.respawnAt = ((Number) map.get("respawnAt")).longValue();
         this.showHologram = (Boolean) map.get("showHologram");
     }
@@ -59,7 +66,7 @@ public class Spawner implements ConfigurationSerializable {
         } else if(getRemainingUntilRespawn() <= 0) {
             spawn();
         } else if(showHologram) {
-            String time = BukkitUtil.color(type.getDisplayName() + " &fпоявится через &e" + TimeUtil.formatSeconds(getRemainingUntilRespawn() / 1000));
+            String time = BukkitUtil.color(displayName + " &fпоявится через &e" + TimeUtil.formatSeconds(getRemainingUntilRespawn() / 1000));
             if(hologram == null) {
                 hologram = HologramsAPI.createHologram(RPG.get(), spawnLocation.clone().add(0, 1.5, 0));
                 hologram.appendTextLine("Привет, {player}!"); // TODO: Fix {player} somehow...
@@ -72,6 +79,10 @@ public class Spawner implements ConfigurationSerializable {
 
     public void spawn() {
         current = SpawnerManager.get().spawnBoss(this);
+        LivingEntity entity = current.getEntity();
+        entity.setCustomName(displayName);
+        entity.setMaxHealth(health);
+        entity.setHealth(health);
     }
 
     public void despawn() {
@@ -99,12 +110,29 @@ public class Spawner implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("id", id);
+        map.put("displayName", displayName);
+        map.put("health", health);
+        map.put("damage", damage);
         map.put("location", BukkitUtil.toString(spawnLocation));
         map.put("type", type.name());
         map.put("interval", interval);
-        map.put("respawnAt", respawnAt);
         map.put("showHologram", showHologram);
+        map.put("respawnAt", respawnAt);
         return map;
+    }
+
+    public List<String> getDescription() {
+        return Lists.newArrayList(
+        "&7ID: &f" + id,
+        "&7Тип: &f" + type.getId(),
+        "&7Урон: &f" + damage,
+        "&7ХП: &f" + health,
+        "&7Статус: " + (isAlive() ? "&a&lЖивой" : "&c&l" + TimeUtil.formatSeconds(getRemainingUntilRespawn() / 1000))
+        );
+    }
+
+    public void register() {
+        SpawnerManager.get().getSpawners().put(id, this);
     }
 
 }

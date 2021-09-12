@@ -11,6 +11,7 @@ import eu.vortexgg.rpg.util.TaskUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 
 import java.util.HashMap;
@@ -26,11 +27,11 @@ public class SpawnerManager {
 
     public SpawnerManager(RPG plugin) {
         instance = this;
-        plugin.getServer().getPluginManager().registerEvents(new BossListener(), plugin);
-        plugin.getServer().getScheduler().runTaskTimer(plugin, () -> spawners.values().forEach(Spawner::update),0, 20);
+        Bukkit.getPluginManager().registerEvents(new BossListener(), plugin);
+        Bukkit.getScheduler().runTaskTimer(plugin, () -> spawners.values().forEach(Spawner::update),0, 20);
         data = new SpawnerFile(plugin);
-        TaskUtil.async(data::load);
         menu = new SpawnersMenu();
+        TaskUtil.async(data::load);
     }
 
     public Boss getBossByEntity(Entity entity) {

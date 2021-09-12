@@ -16,7 +16,7 @@ public class SpawnerFile extends FlatFile {
     public void load() {
         SpawnerManager.get().getSpawners().clear();
         if (config.contains("spawners")) {
-            JavaUtil.createList(config.get("spawners"), Spawner.class);
+            JavaUtil.createList(config.get("spawners"), Spawner.class).forEach(Spawner::register);
         }
         RPG.get().getLogger().info("Loaded " + SpawnerManager.get().getSpawners().size() + " spawners.");
     }

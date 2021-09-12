@@ -10,8 +10,8 @@ import java.sql.DriverManager;
 @Getter
 public class DataManager {
 
-    static DataManager instance;
-    Connection connection;
+    private static DataManager instance;
+    private Connection connection;
 
     public DataManager() {
         instance = this;

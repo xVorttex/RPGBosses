@@ -10,10 +10,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityCombustEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class BossListener implements Listener {
@@ -47,8 +44,11 @@ public class BossListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageEvent e) {
         LivingEntity damager = BukkitUtil.getFinalAttacker(e, true);
-        if(damager == null)
+
+        if(damager != null && !(damager instanceof Player)) {
+            e.setCancelled(true);
             return;
+        }
 
         Entity entity = e.getEntity();
 
@@ -59,18 +59,16 @@ public class BossListener implements Listener {
                 e.setCancelled(true);
                 return;
             }
-            if(damager instanceof Player)
-                boss.onDamage((Player)damager, e.getFinalDamage());
+            if(damager != null)
+                boss.onDamage((Player) damager, e.getFinalDamage());
             return;
         }
 
-        boss = verify(damager);
-        if(boss != null) {
-            if(!(entity instanceof Player)) {
-                e.setCancelled(true);
-                return;
+        if(damager != null) {
+            boss = verify(damager);
+            if (boss != null) {
+                boss.onAttack((Player) damager, (EntityDamageByEntityEvent) e);
             }
-            boss.onAttack(e);
         }
     }
 

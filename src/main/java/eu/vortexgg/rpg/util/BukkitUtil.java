@@ -88,8 +88,7 @@ public class BukkitUtil {
         return CraftItemStack.asCraftMirror(nmsStack);
     }
 
-    public static void setHealth(LivingEntity entity, double health) {
-        final double newHealth = entity.getHealth() - health;
+    public static void setHealth(LivingEntity entity, double newHealth) {
         entity.setHealth(newHealth <= 0 ? 0 : Math.min(newHealth, entity.getMaxHealth()));
     }
 

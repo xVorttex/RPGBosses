@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import eu.vortexgg.rpg.spawner.Spawner;
 import eu.vortexgg.rpg.spawner.SpawnerManager;
 import eu.vortexgg.rpg.util.BukkitUtil;
-import eu.vortexgg.rpg.util.TimeUtil;
 import eu.vortexgg.rpg.util.VItemStack;
 import eu.vortexgg.rpg.util.menu.item.MenuItem;
 import eu.vortexgg.rpg.util.menu.type.PaginatedMenu;
@@ -32,14 +31,8 @@ public class SpawnersMenu extends PaginatedMenu<Spawner> {
     @Override
     public void fill(int slot, int index) {
         Spawner spawner = values.get(index);
-        MenuItem item = new MenuItem(new VItemStack(Material.SKELETON_SKULL, "&3&l" + spawner.getId()));
-        List<String> lore = Lists.newArrayList();
-        lore.add("&7Босс: &f" + spawner.getType().getDisplayName());
-        if(!spawner.isAlive()) {
-            lore.add("&7Статус: &c&l" + TimeUtil.formatSeconds(spawner.getRemainingUntilRespawn()));
-        } else {
-            lore.add("&7Статус: &a&lЖивой");
-        }
+        MenuItem item = new MenuItem(new VItemStack(Material.SKELETON_SKULL, "&f&l" + spawner.getDisplayName()));
+        List<String> lore = spawner.getDescription();
         lore.add("");
 
         if(spawner.isAlive()) lore.add("&f&lЛевый клик &7телепортироваться");
@@ -54,13 +47,14 @@ public class SpawnersMenu extends PaginatedMenu<Spawner> {
                 p.teleport(spawner.getCurrent().getEntity());
             } else if(!alive && t == ClickType.RIGHT) {
                 spawner.spawn();
-                p.sendMessage(BukkitUtil.color("Вы успешно &aвозродили &fбосса " + spawner.getType().getDisplayName()));
+                p.sendMessage(BukkitUtil.color("Вы успешно &aвозродили &fбосса " + spawner.getDisplayName()));
+                super.update();
             } else if(t == ClickType.SHIFT_RIGHT) {
                 spawner.getSpawnerMenu().open(p);
             } else if(t == ClickType.SHIFT_LEFT) {
                 SpawnerManager.get().getSpawners().remove(spawner.getId());
                 p.sendMessage(BukkitUtil.color("Вы успешно &cудалили спавнер " + spawner.getId()));
-                p.closeInventory();
+                super.update();
             }
         });
 

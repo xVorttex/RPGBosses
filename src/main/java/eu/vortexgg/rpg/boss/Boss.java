@@ -23,10 +23,14 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Getter
@@ -47,7 +51,6 @@ public abstract class Boss {
 
     public void spawn(Location spawn) {
         entity = (LivingEntity) spawn.getWorld().spawnEntity(spawn, type.getData().getType());
-        entity.setCustomName(type.getDisplayName());
         id = entity.getUniqueId();
         type.getData().apply(entity);
         SpawnerManager.get().getAliveBosses().add(this);
@@ -62,13 +65,20 @@ public abstract class Boss {
     }
 
     public void onTick() {
-        if (isOutsideOfRadius()) {
+        if (isOutsideOfRadius())
             entity.teleport(spawner.getSpawnLocation());
-        }
+        if(type.getData().getRegen() != 0)
+            heal(type.getData().getRegen());
     }
 
-    public void onAttack(EntityDamageEvent event) {
-        event.setDamage(type.getData().getDamage());
+    public void onAttack(Player player, EntityDamageByEntityEvent event) {
+        double damage = spawner.getDamage(), multiplier = 1.0;
+
+        if(entity.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
+            multiplier += entity.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier() + 0.5;
+        }
+
+        event.setDamage(damage * multiplier);
     }
 
     public void onDeath() {
@@ -125,7 +135,7 @@ public abstract class Boss {
 
         if (bcs) {
             broadcast.addAll(Lang.BOSS_KILLED_FOOTER);
-            broadcast.replaceAll(str -> str.replaceAll("%money%", String.valueOf(type.getData().getMoneyReward())).replaceAll("%displayname%", type.getDisplayName()));
+            broadcast.replaceAll(str -> str.replaceAll("%money%", String.valueOf(type.getData().getMoneyReward())).replaceAll("%displayname%", spawner.getDisplayName()));
             broadcast.forEach(BukkitUtil::bcs);
         }
 

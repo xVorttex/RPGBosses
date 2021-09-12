@@ -5,6 +5,7 @@ import eu.vortexgg.rpg.boss.BossType;
 import eu.vortexgg.rpg.spawner.Spawner;
 import eu.vortexgg.rpg.spawner.SpawnerManager;
 import eu.vortexgg.rpg.util.BukkitUtil;
+import eu.vortexgg.rpg.util.JavaUtil;
 import eu.vortexgg.rpg.util.TimeUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,19 +27,22 @@ public class SpawnerCommands implements CommandExecutor {
         if (s.hasPermission("admin")) {
             if (args.length == 0) {
                 s.sendMessage(BukkitUtil.formatHelp("Квесты"));
-                s.sendMessage("/spawner create <айди> <type> <interval>");
+                s.sendMessage("/spawner create <айди> <displayName> <type> <health> <damage> <interval>");
                 return true;
             } else {
                 switch (args[0].toLowerCase()) {
                     case "create": {
-                        if (args.length == 4) {
+                        if (args.length == 7) {
                             String id = args[1].toLowerCase();
 
                             if (spawnerManager.getSpawners().containsKey(id)) {
                                 s.sendMessage("§cТакой спавнер уже существует!");
                                 return false;
                             }
-                            String typeId = args[2].toLowerCase();
+
+                            String displayName = BukkitUtil.color(args[2]);
+
+                            String typeId = args[3].toLowerCase();
 
                             BossType type = BossType.getTypeById(typeId);
                             if (type == null) {
@@ -46,15 +50,22 @@ public class SpawnerCommands implements CommandExecutor {
                                 return false;
                             }
 
-                            long interval = TimeUtil.getTimeByArg(args[3]);
+                            double health = JavaUtil.tryParseDouble(args[4]);
+                            if(health < 0) health = 20;
+
+                            double damage = JavaUtil.tryParseDouble(args[5]);
+                            if(damage < 0) damage = 0;
+
+                            long interval = TimeUtil.getTimeByArg(args[6]);
                             if(interval < 0) {
                                 s.sendMessage("§cИнтервал не может быть нулевым!");
                                 return false;
                             }
 
-                            new Spawner(id, ((Player)s).getLocation(), type, interval);
+                            new Spawner(id, displayName, ((Player)s).getLocation(), type, health, damage, interval).register();
 
-                            s.sendMessage("§fВы §aуспешно §fсоздали спавнер! ID: " + id + " Тип: " + type.getId() + " Интервал: " + TimeUtil.formatSeconds(interval / 1000));
+                            s.sendMessage("§fВы §aуспешно §fсоздали спавнер!");
+                            s.sendMessage(BukkitUtil.createText("Наведите для §eинформации §fо спавнере", "§7ID: §f" + id + "\n§7Тип: §f" + type.getId() + "\n§7Имя: §f" + displayName + "\n§7Урон: §f" + damage + "\n§7ХП: §f" + health + "\n§7Интервал: §f" + TimeUtil.formatSeconds(interval / 1000), null));
                             s.sendMessage("Используйте §7/spawner " + id + " §fдля изменения.");
                         }
                         return false;
@@ -69,7 +80,6 @@ public class SpawnerCommands implements CommandExecutor {
 
                         spawner.getSpawnerMenu().open((Player) s);
                     }
-
                 }
             }
         }

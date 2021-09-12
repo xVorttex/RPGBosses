@@ -31,6 +31,7 @@ import java.util.Map.Entry;
 public class Menu {
 
     public static final MenuItem DEFAULT_BACKGROUND_ITEM = new MenuItem(new VItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE, ""));
+    private static final ItemStack AIR = new ItemStack(Material.AIR);
 
     final Player owner;
     final Map<Integer, MenuItem> items = Maps.newConcurrentMap();
@@ -65,11 +66,7 @@ public class Menu {
 
     public void update() {
         for (int i = 0; i < inventory.getSize(); i++) {
-            if (items.containsKey(i)) {
-                inventory.setItem(i, items.get(i).getItemStack());
-            } else if (background != null) {
-                inventory.setItem(i, background.getItemStack());
-            }
+            inventory.setItem(i, items.containsKey(i) ? items.get(i).getItemStack() : background != null ? background.getItemStack() : AIR);
         }
 
         if (!updatables.isEmpty()) {
@@ -79,7 +76,7 @@ public class Menu {
                 for (Entry<Integer, UpdatableMenuItem> entry : updatables.entrySet()) {
                     UpdatableMenuItem value = entry.getValue();
                     for (HumanEntity en : inventory.getViewers())
-                        entry.getValue().getRunnable().update((Player) en, value, this, entry.getKey());
+                        value.getRunnable().update((Player) en, value, this, entry.getKey());
                 }
             }, 0, 20);
         }

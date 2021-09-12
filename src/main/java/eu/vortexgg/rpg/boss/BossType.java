@@ -1,5 +1,6 @@
 package eu.vortexgg.rpg.boss;
 
+import eu.vortexgg.rpg.boss.entity.RavagerBoss;
 import eu.vortexgg.rpg.boss.entity.SummonerBoss;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,18 +12,19 @@ import org.bukkit.entity.EntityType;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public enum BossType {
 
-    SUMMONER("summoner", "&6&lПризыватель", SummonerBoss.class,
-            new BossData().setType(EntityType.ZOMBIE).setMaxHealth(20)),
-    SUMMONER_MINI("summoner_mini", "&c&lМини призыватели", SummonerBoss.SummonerMiniBoss.class,
-            new BossData().setType(EntityType.ZOMBIE).setBaby(true).setChild(true).setMaxHealth(20).setBroadcastable(false));
+    SUMMONER("summoner", SummonerBoss.class,
+            new BossData().setType(EntityType.ZOMBIE)),
+    SUMMONER_MINI("summoner_mini", SummonerBoss.SummonerMiniBoss.class,
+            new BossData().setType(EntityType.ZOMBIE).setBaby(true).setChild(true).setBroadcastable(false)),
+    RAVAGER("ravager", RavagerBoss.class,
+            new BossData().setType(EntityType.PILLAGER));
 
-    String id, displayName;
+    String id;
     Class<? extends Boss> clazz;
     BossData data;
 
-    BossType(String id, String displayName, Class<? extends Boss> clazz, BossData data) {
+    BossType(String id, Class<? extends Boss> clazz, BossData data) {
         this.id = id;
-        this.displayName = ChatColor.translateAlternateColorCodes('&', displayName);
         this.clazz = clazz;
         this.data = data;
     }

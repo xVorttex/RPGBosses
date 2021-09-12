@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class MenuManager implements Listener {
 
-    static Map<String, Menu> tracker = Maps.newHashMap();
+    private static final Map<String, Menu> tracker = Maps.newHashMap();
 
     public static void track(String name, Menu m) {
         tracker.put(name, m);

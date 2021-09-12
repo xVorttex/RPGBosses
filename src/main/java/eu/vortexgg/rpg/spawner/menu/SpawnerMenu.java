@@ -5,24 +5,28 @@ import eu.vortexgg.rpg.boss.BossType;
 import eu.vortexgg.rpg.spawner.Spawner;
 import eu.vortexgg.rpg.util.BukkitUtil;
 import eu.vortexgg.rpg.util.TaskUtil;
-import eu.vortexgg.rpg.util.TimeUtil;
 import eu.vortexgg.rpg.util.VItemStack;
 import eu.vortexgg.rpg.util.menu.Menu;
 import eu.vortexgg.rpg.util.menu.item.MenuItem;
 import eu.vortexgg.rpg.util.menu.type.PaginatedMenu;
 import eu.vortexgg.rpg.util.sign.SignManager;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.Material;
 
 import java.util.List;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SpawnerMenu extends Menu {
 
-    private final Spawner spawner;
-    private final Menu bossMenu;
+    Spawner spawner;
+    Menu bossMenu;
 
     public SpawnerMenu(Spawner spawner) {
         super(null, "Спавнер Эдитор", 5);
         this.spawner = spawner;
+        this.bossMenu = new SpawnerBossSelectorMenu(spawner, this);
+
         for(int i = 0; i < 9; i++) {
             setItem(i, DEFAULT_BACKGROUND_ITEM);
         }
@@ -30,12 +34,9 @@ public class SpawnerMenu extends Menu {
             setItem(i, DEFAULT_BACKGROUND_ITEM);
         }
 
-        bossMenu = new SpawnerBossSelectorMenu(spawner, this);
-
-        setItem(22, createIdEditorItem(this, spawner));
+        setItem(22, createDisplayNameEditorItem(this, spawner));
         setItem(21, createBossSelectorItem(this, spawner));
         setItem(23, createLocationEditorItem(this, spawner));
-
     }
 
     @Override
@@ -54,39 +55,30 @@ public class SpawnerMenu extends Menu {
     }
 
     public static MenuItem createSpawnerInfoItem(Spawner spawner) {
-        MenuItem item = new MenuItem(new VItemStack(Material.END_CRYSTAL, "&3Спавнер &f" + spawner.getId()));
-        List<String> lore = Lists.newArrayList();
-        lore.add("&7ID: &f" + spawner.getId());
-        lore.add("&7Босс: &f" + spawner.getType().getDisplayName());
-        if(!spawner.isAlive()) {
-            lore.add("&7Статус: &c&l" + TimeUtil.formatSeconds(spawner.getRemainingUntilRespawn()));
-        } else {
-            lore.add("&7Статус: &a&lЖивой");
-        }
+        MenuItem item = new MenuItem(new VItemStack(Material.END_CRYSTAL, "&fСпавнер " + spawner.getDisplayName()));
+        List<String> lore = spawner.getDescription();
         lore.add("");
 
         lore.add("");
         lore.add("&7Используя кнопки ниже,");
         lore.add(" &7вы можете изменить квест.");
-        lore.add("&fТекст квеста поменять можно");
-        lore.add(" &fтолько в конфиге");
 
         item.setLore(lore);
         return item;
     }
 
-    public static MenuItem createIdEditorItem(SpawnerMenu parent, Spawner spawner) {
-        MenuItem item = new MenuItem(new VItemStack(Material.OAK_SIGN, "&fИзменить ID спавнера"));
+    public static MenuItem createDisplayNameEditorItem(SpawnerMenu parent, Spawner spawner) {
+        MenuItem item = new MenuItem(new VItemStack(Material.OAK_SIGN, "&fИзменить имя спавнера"));
         List<String> lore = Lists.newArrayList();
-        lore.add("&7Нажмите для изменения ID,");
+        lore.add("&7Нажмите для изменения имени");
         lore.add(" &7спавнера.");
         item.setLore(lore);
 
         item.addListener((type, menu, slot, p) -> SignManager.get().open(p, (player, lines) -> {
-            spawner.setId(lines[0]);
+            spawner.setDisplayName(BukkitUtil.color(lines[0]));
             parent.update();
             parent.open(p);
-        }, "", "Напишите новое айди", "-----", "-----"));
+        }, "", "Напишите новое имя", "-----", "-----"));
 
         return item;
     }
@@ -100,6 +92,7 @@ public class SpawnerMenu extends Menu {
         item.addListener((type, menu, slot, p) -> {
             spawner.setSpawnLocation(p.getLocation());
             p.sendMessage(BukkitUtil.color("Вы успешно &aизменили &fлокацию спавнера"));
+            p.closeInventory();
         });
         return item;
     }

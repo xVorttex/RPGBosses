@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class PaginatedMenu<T> extends Menu {
     }
 
     public static MenuItem getBackItem(PaginatedMenu<?> menu) {
-        MenuItem back = new MenuItem(new VItemStack(Material.ARROW, "§3Предыдущая страница §7[" + (menu.page + 1) + "/" + (menu.maxPages + 1) + "]"));
+        MenuItem back = new MenuItem(new VItemStack(Material.ARROW, "&3Предыдущая страница &7[" + (menu.page + 1) + "/" + (menu.maxPages + 1) + "]"));
         back.addListener((type, m, slot, p) -> {
             if (menu.page > 0) {
                 menu.page--;
@@ -40,7 +41,7 @@ public class PaginatedMenu<T> extends Menu {
     }
 
     public static MenuItem getNextItem(PaginatedMenu<?> menu) {
-        MenuItem back = new MenuItem(new VItemStack(Material.ARROW, "§3Следущая страница §7[" + (menu.page + 1) + "/" + (menu.maxPages + 1) + "]"));
+        MenuItem back = new MenuItem(new VItemStack(Material.ARROW, "&3Следущая страница &7[" + (menu.page + 1) + "/" + (menu.maxPages + 1) + "]"));
         back.addListener((type, m, slot, p) -> {
             if (menu.hasNextPage) {
                 menu.page++;
@@ -55,6 +56,8 @@ public class PaginatedMenu<T> extends Menu {
         updatables.clear();
         items.clear();
         slotToIndex.clear();
+        ItemStack air = new ItemStack(Material.AIR);
+        for(int i = 0; i < inventory.getSize(); i++) inventory.setItem(i, air);
         setItem(nextSlot, getBackItem(this));
         setItem(backSlot, getNextItem(this));
         refresh();

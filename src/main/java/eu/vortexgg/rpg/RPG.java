@@ -8,7 +8,9 @@ import eu.vortexgg.rpg.spawner.SpawnerManager;
 import eu.vortexgg.rpg.util.ConfigFile;
 import eu.vortexgg.rpg.util.menu.MenuManager;
 import eu.vortexgg.rpg.util.sign.SignManager;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,10 +18,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Arrays;
 
 @Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RPG extends JavaPlugin {
 
-    static RPG instance;
-    @Getter static Economy econ;
+    private static RPG instance;
+    @Getter private static Economy econ;
 
     ConfigFile config, lang;
     DataManager data;

@@ -30,11 +30,9 @@ public class BossData {
     ItemStack hand, secondHand;
     int noHitDelay = 20;
     boolean baby, child, broadcastable = true;
-    double damage, knockbackResistance, maxHealth, attackSpeed, movementSpeed, followRange, inactiveRadius = 24;
+    double regen, knockbackResistance, attackSpeed, movementSpeed, followRange, inactiveRadius = 24;
 
     public void apply(LivingEntity entity) {
-        entity.setMaxHealth(maxHealth);
-        entity.setHealth(maxHealth);
         if(entity instanceof Ageable && baby)
             ((Ageable)entity).setBaby();
         entity.setMaximumNoDamageTicks(noHitDelay);
@@ -55,6 +53,11 @@ public class BossData {
 
     public BossData setArmor(ItemStack[] items) {
         this.armor = items;
+        return this;
+    }
+
+    public BossData setRegen(double regen) {
+        this.regen = regen;
         return this;
     }
 
@@ -83,11 +86,6 @@ public class BossData {
         return this;
     }
 
-    public BossData setMaxHealth(double maxHealth) {
-        this.maxHealth = maxHealth;
-        return this;
-    }
-
     public BossData setMovementSpeed(double speed) {
         this.movementSpeed = speed;
         return this;
@@ -105,11 +103,6 @@ public class BossData {
 
     public BossData setMoneyReward(int moneyReward) {
         this.moneyReward = moneyReward;
-        return this;
-    }
-
-    public BossData setDamage(double damage) {
-        this.damage = damage;
         return this;
     }
 

@@ -5,8 +5,11 @@ import eu.vortexgg.rpg.boss.Boss;
 import eu.vortexgg.rpg.boss.BossType;
 import eu.vortexgg.rpg.spawner.Spawner;
 import eu.vortexgg.rpg.util.VItemStack;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -69,6 +72,12 @@ public class SummonerBoss extends Boss {
         }
 
         @Override
+        public void spawn(Location spawn) {
+            super.spawn(spawn);
+            entity.setCustomName("&c&lМиники");
+        }
+
+        @Override
         public boolean isOutsideOfRadius() {
             return entity.getLocation().distance(spawner.isAlive() ? spawner.getCurrent().getEntity().getLocation() : spawner.getSpawnLocation()) >= type.getData().getInactiveRadius();
         }
@@ -80,6 +89,10 @@ public class SummonerBoss extends Boss {
             }
         }
 
+        @Override
+        public void onAttack(Player entity, EntityDamageByEntityEvent event) {
+            event.setDamage(2.5);
+        }
 
     }
 
