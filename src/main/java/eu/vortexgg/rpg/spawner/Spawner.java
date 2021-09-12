@@ -57,7 +57,7 @@ public class Spawner implements ConfigurationSerializable {
 
     /*
      * Основной метод для смерти текущего моба:
-     * 1. Обновляет время респавна.
+     * 1. Обновляет время респавна
      * 2. Обновляет текущего босса
      * */
     public void die() {
@@ -92,7 +92,7 @@ public class Spawner implements ConfigurationSerializable {
      * Основной метод для спавна босса:
      * 1. Очищает таймер-голограмму если она есть
      * 2. Спавнит моба
-     * 3. Применяет ХП, имя к мобу.
+     * 3. Применяет ХП, имя к мобу
      * */
     public void spawn() {
         current = SpawnerManager.get().spawnBoss(this);
@@ -103,7 +103,7 @@ public class Spawner implements ConfigurationSerializable {
     }
 
     /*
-     * Основной метод для вынужденного удаления моба и голограммы, если они есть.
+     * Основной метод для вынужденного удаления моба и голограммы, если они есть
      * */
     public void despawn() {
         if(current != null)
@@ -122,7 +122,7 @@ public class Spawner implements ConfigurationSerializable {
     }
 
     /*
-     * Метод получения описания спавнера в данный момент.
+     * Метод получения описания спавнера в данный момент
      * */
     public List<String> getDescription() {
         return Lists.newArrayList(
@@ -142,9 +142,9 @@ public class Spawner implements ConfigurationSerializable {
     }
 
     /*
-     * Удаляет спавнер в системе.
+     * Удаляет спавнер в системе
      * Удаляет моба, если он живой
-     * Удаляет таймер-голограмму, если она есть.
+     * Удаляет таймер-голограмму, если она есть
      * */
     public void unregister() {
         despawn();
@@ -152,7 +152,7 @@ public class Spawner implements ConfigurationSerializable {
     }
 
     /*
-     * Возвращает true, если моб живой.
+     * Возвращает true, если моб живой
      * */
     public boolean isAlive() {
         return current != null && !current.getEntity().isDead();

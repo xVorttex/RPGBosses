@@ -192,7 +192,7 @@ public abstract class Boss {
     }
 
     /*
-     * Проверяет, если моб за макс. радиусом от точки.
+     * Проверка на радиус моба от макс. радиуса точки
      * */
     public boolean isOutsideOfRadius() {
         return entity.getLocation().distance(spawner.getSpawnLocation()) >= type.getData().getInactiveRadius();
