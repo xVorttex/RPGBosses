@@ -16,11 +16,12 @@ import org.bukkit.entity.Entity;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SpawnerManager {
-    HashMap<String, Spawner> spawners = Maps.newHashMap();
+    Map<String, Spawner> spawners = Maps.newHashMap();
     List<Boss> aliveBosses = Lists.newArrayList();
     SpawnerFile data;
     SpawnersMenu menu;

@@ -81,30 +81,39 @@ public abstract class Boss {
         event.setDamage(damage * multiplier);
     }
 
+    /*
+    * Основной метод при смерти босса включающий:
+    * 1. Выдача валютной награды всем нападавшим по нанесенному урону
+    * 2. Оповещение о смерти босса
+    * 3. Выпадение рандомного лута на точке смерти.
+    * 4. Добавление убийства босса в датабазу
+    * */
     public void onDeath() {
         if(!type.getData().isChild())
            spawner.die();
 
         Map<String, Double> percentage = JavaUtil.calculatePercents(damagers, totalDamage);
 
-        int count = 0;
-        final boolean bcs = type.getData().isBroadcastable();
+        final boolean broadcastable = type.getData().isBroadcastable();
 
         List<String> broadcast = null;
-        if (bcs) {
-            broadcast = Lists.newArrayList();
-            broadcast.addAll(Lang.BOSS_KILLED_HEADER);
+        if (broadcastable) {
+            (broadcast = Lists.newArrayList()).addAll(Lang.BOSS_KILLED_HEADER);
         }
+
+        int count = 0;
+        double moneyReward = type.getData().getMoneyReward();
 
         for (Map.Entry<String, Double> entry : percentage.entrySet()) {
             OfflinePlayer op = Bukkit.getOfflinePlayer(entry.getKey());
             double earned = 0;
-            if (type.getData().getMoneyReward() != 0) {
-                earned = entry.getValue() * type.getData().getMoneyReward() / 100.0D;
+
+            if (moneyReward != 0) {
+                earned = entry.getValue() * moneyReward / 100.0D;
                 RPG.getEcon().depositPlayer(op, earned);
             }
 
-            if (bcs) {
+            if (broadcastable) {
                 if (count == 4) {
                     broadcast.add(Lang.BOSS_KILLED_OTHER.replaceAll("%amount%", String.valueOf(damagers.size() - count)));
                 } else if (count < 4) {
@@ -133,7 +142,7 @@ public abstract class Boss {
                 }
         );
 
-        if (bcs) {
+        if (broadcastable) {
             broadcast.addAll(Lang.BOSS_KILLED_FOOTER);
             broadcast.replaceAll(str -> str.replaceAll("%money%", String.valueOf(type.getData().getMoneyReward())).replaceAll("%displayname%", spawner.getDisplayName()));
             broadcast.forEach(BukkitUtil::bcs);

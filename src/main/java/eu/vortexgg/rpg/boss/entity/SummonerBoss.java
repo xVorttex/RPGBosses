@@ -6,6 +6,8 @@ import eu.vortexgg.rpg.boss.BossType;
 import eu.vortexgg.rpg.spawner.Spawner;
 import eu.vortexgg.rpg.util.BukkitUtil;
 import eu.vortexgg.rpg.util.VItemStack;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -16,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SummonerBoss extends Boss {
 
     private static final ItemStack[] SUMMONER_ARMOR = new ItemStack[4];
@@ -27,9 +30,9 @@ public class SummonerBoss extends Boss {
     }
     private static final ItemStack SUMMONER_SWORD = new VItemStack(Material.STONE_SWORD, "",Enchantment.DAMAGE_ALL, 1);
 
-    private final List<SummonerMiniBoss> minions = Lists.newArrayList();
-    private int spawnCooldown = 5, armorCooldown = 15;
-    private boolean armored;
+    final List<SummonerMiniBoss> minions = Lists.newArrayList();
+    int spawnCooldown = 5, armorCooldown = 15;
+    boolean armored;
 
     public SummonerBoss(Spawner spawner, BossType type) {
         super(spawner, type);

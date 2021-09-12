@@ -41,9 +41,7 @@ public class SpawnerCommands implements CommandExecutor {
                                 return false;
                             }
 
-                            String displayName = BukkitUtil.color(args[2]);
-
-                            String typeId = args[3].toLowerCase();
+                            String displayName = BukkitUtil.color(args[2]), typeId = args[3].toLowerCase();
 
                             BossType type = BossType.getTypeById(typeId);
                             if (type == null) {

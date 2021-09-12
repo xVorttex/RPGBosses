@@ -76,6 +76,10 @@ public class BossData {
         return this;
     }
 
+    public boolean isBroadcastable() {
+        return !child && broadcastable;
+    }
+
     public BossData setFirstHand(ItemStack item) {
         this.hand = item;
         return this;

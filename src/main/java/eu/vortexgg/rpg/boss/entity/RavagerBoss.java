@@ -4,6 +4,8 @@ import eu.vortexgg.rpg.boss.Boss;
 import eu.vortexgg.rpg.boss.BossType;
 import eu.vortexgg.rpg.spawner.Spawner;
 import eu.vortexgg.rpg.util.VItemStack;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,14 +17,15 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RavagerBoss extends Boss {
 
     private static final ItemStack RAVAGER_AXE = new VItemStack(Material.IRON_AXE, "", Enchantment.DAMAGE_ALL, 1);
     private static final ItemStack RAVAGER_CROSSBOW = new VItemStack(Material.CROSSBOW, "", Enchantment.IMPALING, 5, Enchantment.MULTISHOT, 1);
     private static final PotionEffect RAVAGER_STRENGTH = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 200, 0);
 
-    private int abilityCooldown;
-    private boolean axed;
+    int abilityCooldown;
+    boolean axed;
 
     public RavagerBoss(Spawner spawner, BossType type) {
         super(spawner, type);
@@ -63,11 +66,6 @@ public class RavagerBoss extends Boss {
     public void spawn(Location spawn) {
         super.spawn(spawn);
         entity.getEquipment().setItemInMainHand(RAVAGER_CROSSBOW);
-    }
-
-    @Override
-    public void despawn() {
-        super.despawn();
     }
 
 }

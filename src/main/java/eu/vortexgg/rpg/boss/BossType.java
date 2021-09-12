@@ -14,7 +14,7 @@ public enum BossType {
     SUMMONER("summoner", SummonerBoss.class,
             new BossData().setType(EntityType.ZOMBIE)),
     SUMMONER_MINI("summoner_mini", SummonerBoss.SummonerMiniBoss.class,
-            new BossData().setType(EntityType.ZOMBIE).setBaby(true).setChild(true).setBroadcastable(false)),
+            new BossData().setType(EntityType.ZOMBIE).setBaby(true).setChild(true)),
     RAVAGER("ravager", RavagerBoss.class,
             new BossData().setType(EntityType.PILLAGER));
 

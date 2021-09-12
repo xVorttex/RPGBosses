@@ -23,11 +23,11 @@ public class DataManager {
 
     public void connect() {
         try {
-            File dataFolder = new File(RPG.get().getDataFolder(), "bosses.db");
-            if (!dataFolder.exists()) {
-                dataFolder.createNewFile();
+            File file = new File(RPG.get().getDataFolder(), "bosses.db");
+            if (!file.exists()) {
+                file.createNewFile();
             }
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + file);
 
             update("CREATE TABLE IF NOT EXISTS bosses(ID VARCHAR(255), DATE VARCHAR(255), TOP VARCHAR(255), PRIMARY KEY (ID))");
         } catch (Exception e) {
