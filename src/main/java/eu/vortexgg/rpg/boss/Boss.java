@@ -52,7 +52,7 @@ public abstract class Boss {
     /*
      * Основной метод при спавне моба:
      * Спавнит моба, применяя дату из типа босса
-     * Тригеррит ивенты, и так-же добавляет в мапу живых боссов.
+     * Тригеррит ивенты, и так-же добавляет в мапу живых боссов
      * */
     public void spawn(Location spawn) {
         entity = (LivingEntity) spawn.getWorld().spawnEntity(spawn, type.getData().getType());
@@ -65,7 +65,7 @@ public abstract class Boss {
     /*
      * Основной метод при специальном удалении босса:
      * Удаляет живого моба если он есть, и так-же
-     * даёт знать спавнеру что он был деспавнут.
+     * даёт знать спавнеру что он был деспавнут
      * */
     public void despawn() {
         if (entity != null) {
@@ -104,7 +104,7 @@ public abstract class Boss {
     * Основной метод при смерти босса:
     * 1. Выдача валютной награды всем нападавшим по нанесенному урону
     * 2. Оповещение о смерти босса
-    * 3. Выпадение рандомного лута на точке смерти.
+    * 3. Выпадение рандомного лута на точке смерти
     * 4. Добавление убийства босса в датабазу
     * */
     public void onDeath() {
@@ -192,7 +192,7 @@ public abstract class Boss {
     }
 
     /*
-     * Проверяет если моб за макс. радиусом от точки.
+     * Проверяет, если моб за макс. радиусом от точки.
      * */
     public boolean isOutsideOfRadius() {
         return entity.getLocation().distance(spawner.getSpawnLocation()) >= type.getData().getInactiveRadius();

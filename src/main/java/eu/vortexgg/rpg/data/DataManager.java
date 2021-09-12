@@ -21,6 +21,11 @@ public class DataManager {
         return instance;
     }
 
+    /*
+     * Основной метод для подключения к датабазам:
+     * 1. Подключается к SQLite датабазе
+     * 2. Создает таблицу убийств боссов
+     * */
     public void connect() {
         try {
             File file = new File(RPG.get().getDataFolder(), "bosses.db");
