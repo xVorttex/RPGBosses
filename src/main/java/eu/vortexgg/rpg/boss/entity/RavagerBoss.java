@@ -34,7 +34,7 @@ public class RavagerBoss extends Boss {
         if(entity.getHealth() <= (entity.getMaxHealth() / 2)) {
             if(axed) {
                 if(--abilityCooldown <= 0) {
-                    abilityCooldown = 5;
+                    abilityCooldown = 60;
                     entity.addPotionEffect(RAVAGER_STRENGTH);
                     Player target = (Player)((Mob)entity).getTarget();
                     if(target != null && !target.isDead() && target.getGameMode() != GameMode.CREATIVE) {
